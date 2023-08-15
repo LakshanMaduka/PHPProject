@@ -1,2 +1,2 @@
-<?php session_start ?>
+<?php session_start()?>
 <h1>Hello admin</h1>

@@ -1,3 +1,25 @@
+<? session_start()?>
+<?php
+$conn = mysqli_connect('localhost','root','','myschool');
+
+
+if(isset($_POST['submit'])){
+$username = mysqli_real_escape_string($conn,$_POST["uid"]);
+$pwd =mysqli_real_escape_string($conn,$_POST["pwd"]) ;
+$qury =  "SELECT * FROM admin WHERE name = '{$username}' AND password = '{$pwd}' LIMIT 1";
+$result_set = mysqli_query($conn,$qury);
+if($result_set){
+    if(mysqli_num_rows($result_set)==1){
+        $admin = mysqli_fetch_assoc($result_set);
+        $_SESSION['admin_id'] = $admin['name'];
+        $_SESSION['first_name']=$admin['password'];
+        header("Location: ../public/main.php");
+    }
+}
+
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +38,7 @@
         <h2 class ="font-bold text-4xl text-[#07085B] ">Login</h2>
         <p class= "text-sm mt-4 text-[#5C789B]">If you already a member, easily login </p>
        <!-- form -->
-        <form action ="/includes/login.inc.php" method="post" class="flex flex-col gap-4">
+        <form action ="index.php" method="post" class="flex flex-col gap-4">
          <input type="text"  placeholder="Email" class="p-2 mt-7  rounded-xl border" name="uid">
          <div class="relative">
              <input type="password"  placeholder="Password" class="p-2 rounded-xl border w-full" name="pwd">

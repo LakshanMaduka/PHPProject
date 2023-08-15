@@ -1,22 +1,21 @@
+<? session_start()?>
 <?php
 include_once dbh.inc.php;
-include_once functions.inc.php;
+
 
 if(isset($_POST['submit'])){
-$username = $_POST["uid"];
-$pwd = $_POST["pwd"];
-require_once 'dbh.inc.php';
-require_once 'functions.inc.php';
-
-if(emptyInputsLogin($username,$pwd) !== false){
-    exit();
+$username = mysqli_real_escape_string($conn,$_POST["uid"]);
+$pwd =mysqli_real_escape_string($conn,$_POST["pwd"]) ;
+$qury =  "SELECT * FROM admin WHERE name = '{$username}' AND password = '{$pwd}' LIMIT 1";
+$result_set = mysqli_query($conn,$qury);
+if($result_set){
+    if(mysqli_num_rows($result_set)==1){
+        $admin = mysqli_fetch_assoc($result_set);
+        $_SESSION['admin_id'] = $admin['name'];
+        $_SESSION['first_name']=$admin['password'];
+        header("Location: ../public/main.php");
+    }
 }
 
-    loginUser($conn,$username,$pwd);
-
-
-}else{
-    header('Location:../public/index.php');
-    exit();
 }
 ?>
